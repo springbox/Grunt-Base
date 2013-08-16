@@ -1,9 +1,9 @@
 # Springbox's Grunt Base
 
 ## Dependencies
-[Grunt](http://gruntjs.com/) is the preferred method to utilize Springboard's awesome features. Grunt requires you to have Node.js and Grunt's command line interface installed globally. Our particular setup requires Ruby, Sass, and Compass >=0.12.2 installed. 
+[Grunt](http://gruntjs.com/) is an excellent program that you can utilize to automate many repetitive development tasks and easily work with teams in a platform agnostic environment. Grunt requires you to have Node.js and Grunt's command line interface installed globally. Our particular setup requires Ruby, Sass, and Compass >=0.12.2 installed. 
 
-If you prefer Codekit or another option for compiling SCSS, you can certainly use it for most of Springboard's features! Grunt, however, is the best option we've been able to find for cross-platform teams.
+
 
 ### Node.JS
 Navigate to the [Node.js download page](http://nodejs.org/download/) and install Node. It's straight forward if you use the installers provided for OS X and Windows. If you're on Linux, see [Node's wiki on Github](https://github.com/joyent/node/wiki/Installation) for more detailed instructions.
