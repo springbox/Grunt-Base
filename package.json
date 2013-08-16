@@ -1,12 +1,17 @@
 {
-  "name": "GruntBase",
+  "name": "Springbox-Grunt-Base",
   "private": false,
   "version": "0.0.1",
   "description": "A base set up of Grunt that you can easily configure for any project.",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-contrib-compass": "~0.5.0"
+    "grunt-contrib-compass": "~0.5.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-bower-organiser": "~0.7.5",
+    "grunt-contrib-watch": "~0.5.2",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-concurrent": "~0.3.0"
   },
   "repository": "https://github.com/springbox/Grunt-Base.git",
   "author": "Springbox"
