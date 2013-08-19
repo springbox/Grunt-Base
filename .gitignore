@@ -1,4 +1,9 @@
 node_modules/
 *.sublime*
 .sass-cache/
-build/
+
+# We'll keep these out of the main repo, but they may be useful
+# when actually using on a project
+site/development/
+site/staging/
+site/production/

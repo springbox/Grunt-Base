@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Grunt Base | Springbox</title>
+
+
+<!-- @if NODE_ENV == 'DEVELOPMENT' -->
+	<script src="http://localhost:35729/livereload.js"></script>
+<!-- @endif -->
+
+</head>
+<body>
+	
+<!-- @if NODE_ENV == 'DEVELOPMENT' -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+	<script src="../src/js/foo1.js"></script>
+	<script src="../src/js/foo2.js"></script>
+	<script src="../src/js/jquery.blah.js"></script>
+	<script src="../src/js/jquery.billy.js"></script>
+	<script src="../src/js/jquery.jenkins.js"></script>
+<!-- @endif -->
+
+<!-- @if NODE_ENV == 'STAGING' -->
+	<script src="staging"></script>
+<!-- @endif -->
+
+<!-- @if NODE_ENV == 'PRODUCTION' -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="http://cdn.foo.com/.min.js"></script>
+<!-- @endif -->
+</body>
+</html>
