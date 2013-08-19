@@ -19,7 +19,7 @@ If you're on Windows, you can download and install via [RubyInstaller](http://ru
 ## Getting started
 
 ### Grunt
-Since we don't store our dependencies in git, you'll need to download them to get started with the Grunt base. Just drop these files into your new project's root directory. Then navigate to it in your terminal and run `npm install`. This tells Node's package manager to fetch our dependencies (located in `package.json`).
+Since we don't store our dependencies in git, you'll need to download them to get started with the Grunt base. Open your terminal app, navigate to the project folder and run `npm install`. This tells Node's package manager to fetch our dependencies (located in `package.json`).
 
 #### Available default tasks
 
