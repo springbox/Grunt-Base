@@ -21,7 +21,7 @@ If you're on Windows, you can download and install via [RubyInstaller](http://ru
 #### Bower
 
 You can use Bower to manage other dependencies like jQuery or Sass extensions. It's not completely necessary but we keep a folder `bower_components` in our root directory. This is used by the current Grunt configuration to pull in any files, but it is an optional component. 
-* If you're using an older version of Bower, you may get a `components` directory created when you install components. You may need to reinstall Bower if this is the case.
+**Note:** If you're using an older version of Bower, you may get a `components` directory created when you install components. You may need to reinstall Bower if this is the case.
  
 ## Getting started
 
