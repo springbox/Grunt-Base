@@ -16,6 +16,13 @@ If you're on OS X or Linux you probably already have Ruby installed; test with r
 
 If you're on Windows, you can download and install via [RubyInstaller](http://rubyinstaller.org/downloads/). During installation be sure to ensure the "Add Ruby executables to your PATH" checkbox is checked. Once the installer is finished, open your command shell and run `gem install compass`.
 
+### Optional
+
+#### Bower
+
+You can use Bower to manage other dependencies like jQuery or Sass extensions. It's not completely necessary but we keep a folder `bower_components` in our root directory. This is used by the current Grunt configuration to pull in any files, but it is an optional component. 
+* If you're using an older version of Bower, you may get a `components` directory created when you install components. You may need to reinstall Bower if this is the case.
+ 
 ## Getting started
 
 ### Grunt
