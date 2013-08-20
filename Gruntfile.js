@@ -218,19 +218,6 @@ module.exports = function(grunt) {
 						dest: '<%= env.options.development.assets %>'
 					}
 				]
-			},
-			source: {
-				files: [
-					{
-						expand: true,
-						cwd: '<%= env.options.source.root %>',
-						src: [
-							'**/*.html',
-							'**/*.php'
-						],
-						dest: '<%= env.options.development.root %>'
-					}
-				]
 			}
 		},
 
@@ -369,7 +356,7 @@ module.exports = function(grunt) {
 					'<%= env.options.source.root %>/**/*!{.js,.scss,.sass,.jpg,.gif,.png,.svg}',
 					'<%= env.options.source.root %>/**/*'
 				],
-				tasks: ['copy:source']
+				tasks: ['env:development', 'preprocess:development']
 			},
 			livereload: {
 				options: { 
