@@ -11,7 +11,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-imagemin');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-imageoptim');
 	grunt.loadNpmTasks('grunt-svg2png');
 	grunt.loadNpmTasks('grunt-svgmin');
 	grunt.loadNpmTasks('grunt-preprocess');
@@ -87,7 +86,7 @@ module.exports = function(grunt) {
 
 		/**
 		 * We'll run svg2png on our regular assets folder and convert everything there.
-		 * @type {Object}
+		 * Documentation: https://github.com/dbushell/grunt-svg2png
 		 */
 		svg2png: {
 			all: {
@@ -99,23 +98,6 @@ module.exports = function(grunt) {
 				]
 			}
 		},
-
-		/**
-		 * This task will run with our production compile. 
-		 * There's not much to the documentation, but here it is:
-		 * https://github.com/JamieMason/grunt-imageoptim
-		 *
-		 * Unfortunately for Windows users, the task utilizes Mac specific software that 
-		 * needs to be installed. The programs that are used are: ImageOptim, 
-		 * ImageAlpha and JPEGmini for Mac.
-		 */
-		// imageoptim: {
-		// 	files: ['<%= env.options.source.assets %>/img'],
-		// 	options: {
-		// 		quitAfter: true,
-		// 		imageAlpha: true
-		// 	}
-		// },
 
 
 		/**
@@ -185,6 +167,8 @@ module.exports = function(grunt) {
 						src: ['img/**/*'], 
 						dest: '<%= env.options.staging.assets %>'
 					},
+					// We're currently configured to minify and concatenate our js files 
+					// for staging, this gives us the option to continue using non-concatenated versions
 					{ 
 						expand: true, 
 						cwd: '<%= env.options.source.assets %>', 
@@ -209,6 +193,9 @@ module.exports = function(grunt) {
 					}
 				]
 			},
+
+			// We don't want to minify or concatenate these in development, so we'll
+			// copy them over in a watch task. They're already included in the `grunt` task
 			scripts: {
 				files: [
 					{
@@ -319,6 +306,10 @@ module.exports = function(grunt) {
 				}
 			},
 			production: {
+				options: {
+					// Let us know how well uglify is performing when we build for production
+					report: 'gzip',
+				},
 				files: {
 					'<%= env.options.production.assets %>/js/app.min.js': [
 						// Files will be concatenated in the order of this array.
@@ -383,6 +374,7 @@ module.exports = function(grunt) {
 			'jshint:others',
 			'compass:development',
 			'copy:development',
+			'copy:scripts',
 			'preprocess:development'
 		]
 	);
