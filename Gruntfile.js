@@ -10,6 +10,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-imagemin');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-imageoptim');
 	grunt.loadNpmTasks('grunt-svg2png');
 	grunt.loadNpmTasks('grunt-svgmin');
@@ -108,26 +109,39 @@ module.exports = function(grunt) {
 		 * needs to be installed. The programs that are used are: ImageOptim, 
 		 * ImageAlpha and JPEGmini for Mac.
 		 */
-		imageoptim: {
-			files: ['<%= env.options.source.assets %>/img'],
-			options: {
-				quitAfter: true,
-				imageAlpha: true
-			}
-		},
-
-
-
-		// imagemin: {
-		// 	dynamic: {
-		// 		files: [{
-		// 			expand: true,
-		// 			cwd: '<%= env.options.source.assets %>/img',
-		// 			src: ['**/*.{png,jpg,gif}'],
-		// 			dest: '<%= env.options.production.assets %>/img'
-		// 		}]
+		// imageoptim: {
+		// 	files: ['<%= env.options.source.assets %>/img'],
+		// 	options: {
+		// 		quitAfter: true,
+		// 		imageAlpha: true
 		// 	}
 		// },
+
+
+		/**
+		 * If you run into errors while optimizing the images, be sure to check 
+		 * your version of Node and make sure it's the latest stable version.
+		 * It can be finicky like that.
+		 * View the documentation at: https://github.com/gruntjs/grunt-contrib-imagemin
+		 */
+		imagemin: {
+			replace: {
+				files: [{
+					expand: true,
+					cwd: '<%= env.options.source.assets %>/img',
+					src: ['**/*.{png,jpg,gif}'],
+					dest: '<%= env.options.source.assets %>/img'
+				}]
+			},
+			production: {
+				files: [{
+					expand: true,
+					cwd: '<%= env.options.source.assets %>/img',
+					src: ['**/*.{png,jpg,gif}'],
+					dest: '<%= env.options.production.assets %>/img'
+				}]
+			}
+		},
 
 		/**
 		 * Copy over our files. We'll run tasks based off the copies.
@@ -192,12 +206,29 @@ module.exports = function(grunt) {
 						cwd: '<%= env.options.source.assets %>', 
 						src: ['img/**/*'], 
 						dest: '<%= env.options.production.assets %>'
-					},
-					{ 
-						expand: true, 
-						cwd: '<%= env.options.source.assets %>', 
-						src: ['js/**/*'], 
-						dest: '<%= env.options.production.assets %>'
+					}
+				]
+			},
+			scripts: {
+				files: [
+					{
+						expand: true,
+						cwd: '<%= env.options.source.assets %>',
+						src: ['js/**/*'],
+						dest: '<%= env.options.development.assets %>'
+					}
+				]
+			},
+			source: {
+				files: [
+					{
+						expand: true,
+						cwd: '<%= env.options.source.root %>',
+						src: [
+							'**/*.html',
+							'**/*.php'
+						],
+						dest: '<%= env.options.development.root %>'
 					}
 				]
 			}
@@ -212,7 +243,7 @@ module.exports = function(grunt) {
 			// Compass' global options
 			options: {
 				importPath: 'bower_components',
-				sassDir: '<%= env.options.development.assets %>/sass',
+				sassDir: '<%= env.options.source.assets %>/sass',
 				relativeAssets: true,
 			},
 			development: {
@@ -250,9 +281,23 @@ module.exports = function(grunt) {
 		 * Let's check our files, yo! No reason to get sloppy with our JS.
 		 * See the source on Github for documentation: 
 		 * https://github.com/gruntjs/grunt-contrib-jshint
+		 *
+		 * In our options we can set values to true which tells jshint to ignore warnings
+		 * for those errors.
+		 * See the jshint documentation to set options for specific error types:
+		 * http://www.jshint.com/docs/options/
 		 */
 		jshint: {
-			all: ['Gruntfile.js']
+			options: {
+				smarttabs: true
+			},
+			others: ['<%= env.options.source.assets %>/js/**/*.js'],
+			gruntfile: {
+				options: {},
+				files: {
+					src: ['Gruntfile.js']
+				}
+			}
 		},
 
 
@@ -262,7 +307,38 @@ module.exports = function(grunt) {
 		 * https://github.com/gruntjs/grunt-contrib-uglify
 		 */
 		uglify: {
-
+			options: {
+				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+						'<%= grunt.template.today("yyyy-mm-dd, h:MM:ss TT") %> */\n',
+				compress: true,
+				mangle: true,
+			},
+			staging: {
+				options: {
+					// output the source name above each file when on staging
+					process: function(src, filepath) {
+						return	'\n // Source: ' + filepath + '\n' +
+								src.replace(/(^|\n)[ \t]*('use strict'|"use strict");?\s*/g, '$1');
+					}
+				},
+				files: {
+					'<%= env.options.staging.assets %>/js/app.min.js': [
+						// Files will be concatenated in the order of this array.
+						// You can also ignore files or glob only files that match certain names.
+						// Grunt supports minimatch if you're curious about the possibilities:
+						// https://github.com/isaacs/minimatch
+						'<%= env.options.source.assets %>/js/**/*.js'
+					]
+				}
+			},
+			production: {
+				files: {
+					'<%= env.options.production.assets %>/js/app.min.js': [
+						// Files will be concatenated in the order of this array.
+						'<%= env.options.source.assets %>/js/**/*.js'
+					]
+				}
+			}
 		},
 
 
@@ -281,18 +357,31 @@ module.exports = function(grunt) {
 				tasks: ['jshint:gruntfile'],
 			},
 			scripts: {
-				files: ['<%= env.options.development.assets %>/**/*.js'],
-				tasks: [''],
+				files: ['<%= env.options.source.assets %>/**/*.js'],
+				tasks: ['jshint:others', 'copy:scripts'],
 			},
 			compass: {
-				files: ['<%= env.options.development.assets %>/sass/**/*.{scss,sass}'],
+				files: ['<%= env.options.source.assets %>/sass/**/*.{scss,sass}'],
 				tasks: ['compass:development'],
+			},
+			source: {
+				files: [
+					'<%= env.options.source.root %>/**/*!{.js,.scss,.sass,.jpg,.gif,.png,.svg}',
+					'<%= env.options.source.root %>/**/*'
+				],
+				tasks: ['copy:source']
 			},
 			livereload: {
 				options: { 
 					livereload: true 
 				},
-				files: ['styles.css', '<%= env.build %>/js/*.js', '*.html', '*.php', '<%= env.options.development.assets %>/img/**/*.{png,jpg,jpeg,gif,webp,svg}']
+				files: [
+					'<%= env.options.development.assets %>/img/**/*.{png,jpg,jpeg,gif,webp,svg}',
+					'<%= env.options.development.assets %>/css/styles.css', 
+					'<%= env.options.development.assets %>/js/**/*.js', 
+					'<%= env.options.development.root %>/**/*.html', 
+					'<%= env.options.development.root %>/**/*.php', 
+				]
 			}
 		}
 	});
@@ -304,6 +393,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', 
 		[
 			'env:development',
+			'jshint:others',
 			'compass:development',
 			'copy:development',
 			'preprocess:development'
@@ -317,8 +407,10 @@ module.exports = function(grunt) {
 	grunt.registerTask('staging', 
 		[
 			'env:staging',
+			'jshint:others',
 			'compass:staging',
-			'copy:production',
+			'copy:staging',
+			'uglify:staging',
 			'preprocess:staging',
 		]
 	);
@@ -329,11 +421,13 @@ module.exports = function(grunt) {
 	 */
 	grunt.registerTask('production', 
 		[
-			'svg2png',
-			'imageoptim',
 			'env:production',
+			'jshint:others',
+			'svg2png',
+			'imagemin:production',
 			'compass:production',
 			'copy:production',
+			'uglify:production',
 			'preprocess:production',
 		]
 	);
@@ -345,8 +439,9 @@ module.exports = function(grunt) {
 	grunt.registerTask('images', 
 		[
 			'svg2png',
-			'imageoptim',
+			'imagemin:replace',
 		]
 	);
+
 
 };

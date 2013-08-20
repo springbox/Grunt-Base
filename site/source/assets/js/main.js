@@ -1,0 +1,5 @@
+var jQuery = '?';
+
+(function($) {
+
+})(jQuery);
