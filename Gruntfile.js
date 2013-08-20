@@ -284,19 +284,12 @@ module.exports = function(grunt) {
 			options: {
 				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
 						'<%= grunt.template.today("yyyy-mm-dd, h:MM:ss TT") %> */\n',
-				compress: true,
-				mangle: {
-					// Don't want some of the files mangled? No prob!
-					except: ['jQuery', 'Backbone']
-				},
+				beautify: true,
 			},
 			staging: {
 				options: {
 					// output the source name above each file when on staging
-					process: function(src, filepath) {
-						return	'\n // Source: ' + filepath + '\n' +
-								src.replace(/(^|\n)[ \t]*('use strict'|"use strict");?\s*/g, '$1');
-					}
+					beautify: true
 				},
 				files: {
 					'<%= env.options.staging.assets %>/js/app.min.js': [
@@ -312,6 +305,11 @@ module.exports = function(grunt) {
 				options: {
 					// Let us know how well uglify is performing when we build for production
 					report: 'gzip',
+					beautify: false,
+					mangle: {
+						// Don't want some a variable mangled? No prob!
+						except: ['jQuery', 'SuperObviousVariableExample']
+					}
 				},
 				files: {
 					'<%= env.options.production.assets %>/js/app.min.js': [
