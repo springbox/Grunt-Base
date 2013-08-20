@@ -285,7 +285,10 @@ module.exports = function(grunt) {
 				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
 						'<%= grunt.template.today("yyyy-mm-dd, h:MM:ss TT") %> */\n',
 				compress: true,
-				mangle: true,
+				mangle: {
+					// Don't want some of the files mangled? No prob!
+					except: ['jQuery', 'Backbone']
+				},
 			},
 			staging: {
 				options: {
